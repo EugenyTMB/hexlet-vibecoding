@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Калькулятор калорий</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7f1;color:#243629;font:16px/1.5 system-ui,sans-serif}main{max-width:850px;margin:60px auto;padding:24px}h1{font-size:clamp(28px,5vw,42px);line-height:1.15;margin:10px 0}header p{color:#607064}.card{background:white;padding:28px;border-radius:24px;margin:24px 0;box-shadow:0 8px 35px #24362908}.badge{font-size:13px;color:#3a7545;font-weight:700;text-transform:uppercase;letter-spacing:2px}form{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}label{display:flex;flex-direction:column;gap:6px;font-size:14px}input{width:100%;padding:12px;border:1px solid #bbc9bb;border-radius:10px;font:inherit}button{padding:12px 18px;border:0;border-radius:10px;background:#367348;color:white;font:inherit;cursor:pointer}button:hover{background:#285936}button:focus-visible,input:focus-visible{outline:3px solid #dfae40;outline-offset:3px}form button{grid-column:1/-1}.total{display:flex;justify-content:space-between;align-items:center;gap:16px}.total strong{font-size:32px;color:#367348}.muted{color:#607064;font-size:14px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:12px 6px;border-bottom:1px solid #e3eae0}th{font-size:13px;color:#607064}.remove{background:#f7ece8;color:#903e30;padding:6px 10px}.remove:hover{background:#efd9d1}#clear{background:#edf2e9;color:#334c39;margin-top:20px}#status{min-height:24px}footer{font-size:13px;color:#607064}@media(max-width:600px){main{margin:20px auto;padding:16px}.card{padding:20px}form{grid-template-columns:1fr}form button{grid-column:auto}.total{align-items:flex-start;flex-direction:column}th,td{font-size:14px}}
+</style></head>
+<body><main><header><span class="badge">Просто о питании</span><h1>Калькулятор калорий</h1><p>Добавьте продукты и узнайте калорийность вашего приёма пищи.</p></header>
+<section class="card" aria-label="Добавление продукта"><form id="food-form">
+<label>Название продукта<input id="name" required maxlength="100" placeholder="Например, гречка"></label>
+<label>Вес, г<input id="weight" type="number" min="0.1" max="100000" step="any" required inputmode="decimal" placeholder="150"></label>
+<label>Ккал на 100 г<input id="calories" type="number" min="0" max="1000" step="any" required inputmode="decimal" placeholder="110"></label>
+<button type="submit">Добавить продукт</button></form><p id="status" class="muted" role="status"></p></section>
+<section class="card"><div class="total"><div><span class="badge">Итого</span><br><span id="count" class="muted">Продуктов: 0</span></div><strong><span id="total" aria-live="polite">0</span> ккал</strong></div>
+<p id="empty" class="muted">Список пуст. Добавьте первый продукт выше.</p>
+<div class="table-wrap"><table id="table" hidden><thead><tr><th scope="col">Продукт</th><th scope="col">Вес</th><th scope="col">Ккал</th><th scope="col">Действие</th></tr></thead><tbody id="foods"></tbody></table></div>
+<button id="clear" type="button" hidden>Очистить список</button></section>
+<footer>Указывайте калорийность с упаковки для того же состояния продукта: сухого или готового. Расчёт: вес × ккал на 100 г ÷ 100. Список сохраняется только в этом браузере.</footer></main><script src="app.js"></script></body></html>
