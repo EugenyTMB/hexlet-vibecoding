@@ -42,6 +42,32 @@ if(typeof module!=='undefined') module.exports={calculateCalories,calculateBmi,g
 if(typeof document!=='undefined'){
  const form=document.querySelector('form'),result=document.querySelector('#result'),status=document.querySelector('#status');
  const format=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0});
+ 
+ // Keep fields empty until a step is requested; start from the placeholder.
+ const stepFields = ['age', 'weight', 'height'];
+ function stepField(input, direction) {
+   const current = input.value === '' ? Number(input.placeholder) : Number(input.value);
+   const next = Math.min(Number(input.max), Math.max(Number(input.min), Math.round(current) + direction));
+   input.value = String(next);
+   input.dispatchEvent(new Event('input', { bubbles: true }));
+ }
+ stepFields.forEach(name => {
+   const input = form.elements[name];
+   input.addEventListener('keydown', event => {
+     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+       event.preventDefault();
+       stepField(input, event.key === 'ArrowUp' ? 1 : -1);
+     }
+   });
+ });
+ form.querySelectorAll('[data-step]').forEach(button => {
+   button.addEventListener('click', () => {
+     const input = form.elements[button.dataset.field];
+     stepField(input, Number(button.dataset.step));
+     input.focus();
+   });
+ });
+
  form.addEventListener('input',()=>{result.hidden=true;status.textContent='';});
  form.addEventListener('submit',event=>{
  event.preventDefault();result.hidden=true;
