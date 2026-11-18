@@ -14,6 +14,7 @@ if(typeof document!=='undefined'){
  form.addEventListener('input',()=>{result.hidden=true;status.textContent='';});
  form.addEventListener('submit',event=>{
  event.preventDefault();result.hidden=true;
+ if(!form.checkValidity()){status.textContent='Заполните все поля корректно: возраст 18–120 лет, вес 20–500 кг, рост 100–250 см.';form.reportValidity();return;}
  const p={};
  for(const key of ['sex','age','weight','height','activity','goal']) p[key]=key==='sex'?form.elements[key].value:Number(form.elements[key].value);
  try{
