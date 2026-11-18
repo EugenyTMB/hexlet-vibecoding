@@ -11,7 +11,7 @@ function calculateCalories(p) {
 function calculateBmi(weight, height) {
  const value = weight / ((height / 100) ** 2);
  if (!Number.isFinite(value) || weight <= 0 || height <= 0) throw new Error('Проверьте вес и рост.');
- const category = value < 18.5 ? 'Недостаточная масса тела' : value < 25 ? 'Нормальная масса тела' : value < 30 ? 'Избыточная масса тела' : 'Ожирение';
+ const category = value < 18.5 ? 'Недостаточная масса тела' : value <= 25 ? 'Нормальная масса тела' : value < 30 ? 'Избыточная масса тела' : 'Ожирение';
  return { value, category };
 }
 const exampleMeals = [

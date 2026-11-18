@@ -19,7 +19,7 @@
 <button class="wide" type="submit">Рассчитать норму</button></form><p id="status" role="status"></p></section>
 <section id="result" class="card" aria-live="polite" hidden><span class="badge">Ваша цель на день</span><div class="result"><span id="target"></span> ккал</div><p id="description" class="muted"></p><dl><dt>Основной обмен</dt><dd><span id="bmr"></span> ккал/день</dd><dt>Поддержание с учётом активности</dt><dd><span id="maintenance"></span> ккал/день</dd></dl>
 <div class="bmi-box"><h2>Индекс массы тела</h2><span id="bmi" class="bmi-number"></span> кг/м² · <span id="bmi-category"></span>
-<p class="muted">ИМТ = вес / рост в метрах². Границы для взрослых: &lt;18,5; 18,5–&lt;25; 25–&lt;30; ≥30. Категория определяется до округления. ИМТ — ориентир, а не диагноз; он не различает мышцы и жировую ткань.</p></div>
+<p class="muted">ИМТ = вес / рост в метрах². Границы для взрослых: &lt;18,5; 18,5–≤25; &gt;25–&lt;30; ≥30. Категория определяется до округления. ИМТ — ориентир, а не диагноз; он не различает мышцы и жировую ткань.</p></div>
 <h2>Что можно съесть за день</h2><p class="muted">Пример на ≈<span id="menu-total"></span> ккал: три приёма пищи. Меню не подогнано под вашу рассчитанную норму и не учитывает аллергии или ограничения питания. Порции можно менять; калорийность уточняйте по упаковке и рецепту.</p>
 <div id="meals" class="meals"></div>
 </section>
@@ -38,7 +38,7 @@ function calculateCalories(p) {
 function calculateBmi(weight, height) {
  const value = weight / ((height / 100) ** 2);
  if (!Number.isFinite(value) || weight <= 0 || height <= 0) throw new Error('Проверьте вес и рост.');
- const category = value < 18.5 ? 'Недостаточная масса тела' : value < 25 ? 'Нормальная масса тела' : value < 30 ? 'Избыточная масса тела' : 'Ожирение';
+ const category = value < 18.5 ? 'Недостаточная масса тела' : value <= 25 ? 'Нормальная масса тела' : value < 30 ? 'Избыточная масса тела' : 'Ожирение';
  return { value, category };
 }
 const exampleMeals = [
