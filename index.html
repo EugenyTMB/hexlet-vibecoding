@@ -1,11 +1,14 @@
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Суточная норма калорий</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f4f7f1;color:#243629;font:16px/1.5 system-ui,sans-serif}main{max-width:800px;margin:40px auto;padding:24px}h1{font-size:clamp(28px,5vw,42px);line-height:1.15}.card{background:white;padding:28px;border-radius:24px;margin:24px 0;box-shadow:0 8px 35px #24362908}.badge{font-size:13px;color:#367348;font-weight:700;text-transform:uppercase;letter-spacing:2px}form{display:grid;grid-template-columns:1fr 1fr;gap:18px}label{display:flex;flex-direction:column;gap:6px;font-size:14px}input,select{width:100%;padding:12px;border:1px solid #bbc9bb;border-radius:10px;background:white;color:inherit;font:inherit}button{padding:14px;border:0;border-radius:10px;background:#367348;color:white;font:inherit;cursor:pointer}button:hover{background:#285936}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #dfae40;outline-offset:3px}.wide{grid-column:1/-1}.muted,footer{color:#607064;font-size:14px}.result{font-size:42px;font-weight:700;color:#367348}dl{display:grid;grid-template-columns:1fr auto;gap:12px}dd{margin:0;font-weight:600}#status:empty{display:none}@media(max-width:550px){main{margin:12px auto;padding:16px}.card{padding:20px}form{grid-template-columns:1fr}.result{font-size:34px}dl{grid-template-columns:1fr;gap:4px}}
+
+.bmi-box{background:#f4f7f1;padding:18px;border-radius:14px;margin-top:24px}.bmi-number{font-size:30px;font-weight:700;color:#367348}.meals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.meal{background:#f4f7f1;padding:16px;border-radius:14px}.meal h3{font-size:17px;margin:0}.meal p{font-weight:600}.meal ul{padding-left:18px;font-size:14px}.meal li{margin:8px 0}@media(max-width:700px){.meals{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}.stepper{position:relative}.stepper input{padding-right:30px;appearance:textfield;-moz-appearance:textfield}.stepper input::-webkit-inner-spin-button,.stepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.step-buttons{position:absolute;right:7px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;width:16px;height:28px}.step-buttons .step-button{padding:0;border-radius:2px;font-size:8px;line-height:1;flex:1;background:transparent;color:#a5afa7}.step-buttons .step-button:hover{background:#f0f3ee;color:#637267}.step-buttons .step-button:focus-visible{outline:2px solid #dfae40;outline-offset:1px}
 </style></head><body><main><header><span class="badge">Просто о питании</span><h1>Суточная норма калорий</h1><p class="muted">Укажите параметры, активность и цель, чтобы получить ориентир на день.</p></header>
 <section class="card" aria-label="Ваши параметры"><form novalidate>
 <label>Пол<select name="sex" required><option value="male">Мужской</option><option value="female">Женский</option></select></label>
-<label>Возраст, лет<input name="age" type="number" min="18" max="120" step="1" required placeholder="30" inputmode="numeric"></label>
-<label>Вес, кг<input name="weight" type="number" min="20" max="500" step="any" required placeholder="70" inputmode="decimal"></label>
-<label>Рост, см<input name="height" type="number" min="100" max="250" step="any" required placeholder="175" inputmode="decimal"></label>
+<div class="field"><label for="age">Возраст, лет</label><div class="stepper"><input id="age" name="age" type="number" min="18" max="120" step="1" required placeholder="30" inputmode="numeric"><div class="step-buttons"><button type="button" class="step-button" data-field="age" data-step="1" aria-label="Возраст, лет: увеличить на 1">▲</button><button type="button" class="step-button" data-field="age" data-step="-1" aria-label="Возраст, лет: уменьшить на 1">▼</button></div></div></div>
+<div class="field"><label for="weight">Вес, кг</label><div class="stepper"><input id="weight" name="weight" type="number" min="20" max="500" step="1" required placeholder="70" inputmode="numeric"><div class="step-buttons"><button type="button" class="step-button" data-field="weight" data-step="1" aria-label="Вес, кг: увеличить на 1">▲</button><button type="button" class="step-button" data-field="weight" data-step="-1" aria-label="Вес, кг: уменьшить на 1">▼</button></div></div></div>
+<div class="field"><label for="height">Рост, см</label><div class="stepper"><input id="height" name="height" type="number" min="100" max="250" step="1" required placeholder="175" inputmode="numeric"><div class="step-buttons"><button type="button" class="step-button" data-field="height" data-step="1" aria-label="Рост, см: увеличить на 1">▲</button><button type="button" class="step-button" data-field="height" data-step="-1" aria-label="Рост, см: уменьшить на 1">▼</button></div></div></div>
 <label class="wide">Уровень активности<select name="activity" required>
 <option value="1.2">Минимальный — сидячий образ жизни (×1,2)</option>
 <option value="1.375">Лёгкий — тренировки 1–3 раза в неделю (×1,375)</option>
@@ -14,7 +17,12 @@
 <option value="1.9">Очень высокий — тяжёлая физическая работа и тренировки (×1,9)</option></select></label>
 <label class="wide">Цель<select name="goal" required><option value="0.85">Похудение −15%</option><option value="1" selected>Поддержание</option><option value="1.15">Набор +15%</option></select></label>
 <button class="wide" type="submit">Рассчитать норму</button></form><p id="status" role="status"></p></section>
-<section id="result" class="card" aria-live="polite" hidden><span class="badge">Ваша цель на день</span><div class="result"><span id="target"></span> ккал</div><p id="description" class="muted"></p><dl><dt>Основной обмен</dt><dd><span id="bmr"></span> ккал/день</dd><dt>Поддержание с учётом активности</dt><dd><span id="maintenance"></span> ккал/день</dd></dl></section>
+<section id="result" class="card" aria-live="polite" hidden><span class="badge">Ваша цель на день</span><div class="result"><span id="target"></span> ккал</div><p id="description" class="muted"></p><dl><dt>Основной обмен</dt><dd><span id="bmr"></span> ккал/день</dd><dt>Поддержание с учётом активности</dt><dd><span id="maintenance"></span> ккал/день</dd></dl>
+<div class="bmi-box"><h2>Индекс массы тела</h2><span id="bmi" class="bmi-number"></span> кг/м² · <span id="bmi-category"></span>
+<p class="muted">ИМТ = вес / рост в метрах². Границы для взрослых: &lt;18,5; 18,5–&lt;25; 25–&lt;30; ≥30. Категория определяется до округления. ИМТ — ориентир, а не диагноз; он не различает мышцы и жировую ткань.</p></div>
+<h2>Что можно съесть за день</h2><p class="muted">Пример на ≈<span id="menu-total"></span> ккал: три приёма пищи. Меню не подогнано под вашу рассчитанную норму и не учитывает аллергии или ограничения питания. Порции можно менять; калорийность уточняйте по упаковке и рецепту.</p>
+<div id="meals" class="meals"></div>
+</section>
 <footer>Ориентировочный расчёт для взрослых по формуле Миффлина — Сан Жеора с коэффициентом активности. Индивидуальные потребности могут отличаться.</footer></main><!-- Скрипт включён в HTML: скачанный файл работает самостоятельно. -->
 <script>
 'use strict';
@@ -26,10 +34,67 @@ function calculateCalories(p) {
  const maintenance=bmr*activity;
  return {bmr,maintenance,target:maintenance*goal};
 }
-if(typeof module!=='undefined') module.exports={calculateCalories};
+
+function calculateBmi(weight, height) {
+ const value = weight / ((height / 100) ** 2);
+ if (!Number.isFinite(value) || weight <= 0 || height <= 0) throw new Error('Проверьте вес и рост.');
+ const category = value < 18.5 ? 'Недостаточная масса тела' : value < 25 ? 'Нормальная масса тела' : value < 30 ? 'Избыточная масса тела' : 'Ожирение';
+ return { value, category };
+}
+const exampleMeals = [
+ { name: 'Завтрак', title: 'Овсянка с бананом и орехами', foods: [
+  {name:'Овсяные хлопья, сухие',grams:70,kcal100:370},
+  {name:'Молоко 2,5%',grams:200,kcal100:52},
+  {name:'Банан, мякоть',grams:100,kcal100:89},
+  {name:'Грецкие орехи',grams:15,kcal100:654}
+ ]},
+ { name: 'Обед', title: 'Курица с рисом и овощами', foods: [
+  {name:'Куриная грудка, готовая без кожи',grams:150,kcal100:165},
+  {name:'Рис, варёный',grams:200,kcal100:130},
+  {name:'Свежие овощи без заправки',grams:200,kcal100:30},
+  {name:'Растительное масло для заправки',grams:10,kcal100:900}
+ ]},
+ { name: 'Ужин', title: 'Рыба с гречкой и овощами', foods: [
+  {name:'Белая рыба, готовая без масла',grams:150,kcal100:120},
+  {name:'Гречка, варёная',grams:200,kcal100:110},
+  {name:'Свежие овощи без заправки',grams:200,kcal100:30},
+  {name:'Растительное масло для заправки',grams:10,kcal100:900}
+ ]}
+];
+function getExampleMenu() {
+ return exampleMeals.map(meal => ({...meal, calories:meal.foods.reduce((sum,food)=>sum+food.grams*food.kcal100/100,0)}));
+}
+
+if(typeof module!=='undefined') module.exports={calculateCalories,calculateBmi,getExampleMenu};
 if(typeof document!=='undefined'){
  const form=document.querySelector('form'),result=document.querySelector('#result'),status=document.querySelector('#status');
  const format=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0});
+ 
+ // Keep fields empty until a step is requested; start from the placeholder.
+ const stepFields = ['age', 'weight', 'height'];
+ function stepField(input, direction) {
+   const current = input.value === '' ? Number(input.placeholder) : Number(input.value);
+   const next = Math.min(Number(input.max), Math.max(Number(input.min), Math.round(current) + direction));
+   input.value = String(next);
+   input.dispatchEvent(new Event('input', { bubbles: true }));
+ }
+ stepFields.forEach(name => {
+   const input = form.elements[name];
+   input.addEventListener('keydown', event => {
+     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+       event.preventDefault();
+       stepField(input, event.key === 'ArrowUp' ? 1 : -1);
+     }
+   });
+ });
+ form.querySelectorAll('[data-step]').forEach(button => {
+   button.addEventListener('click', () => {
+     const input = form.elements[button.dataset.field];
+     stepField(input, Number(button.dataset.step));
+     input.focus();
+   });
+ });
+
  form.addEventListener('input',()=>{result.hidden=true;status.textContent='';});
  form.addEventListener('submit',event=>{
  event.preventDefault();result.hidden=true;
@@ -38,6 +103,21 @@ if(typeof document!=='undefined'){
  for(const key of ['sex','age','weight','height','activity','goal']) p[key]=key==='sex'?form.elements[key].value:Number(form.elements[key].value);
  try{
  const values=calculateCalories(p);
+ const bmi=calculateBmi(p.weight,p.height);
+ document.querySelector('#bmi').textContent=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(bmi.value);
+ document.querySelector('#bmi-category').textContent=bmi.category;
+ const meals=document.querySelector('#meals');
+ meals.replaceChildren();
+ const menu=getExampleMenu();
+ menu.forEach(meal=>{
+ const article=document.createElement('article');article.className='meal';
+ const heading=document.createElement('h3');heading.textContent=meal.name+' · ≈'+format.format(meal.calories)+' ккал';
+ const title=document.createElement('p');title.textContent=meal.title;
+ const list=document.createElement('ul');
+ meal.foods.forEach(food=>{const item=document.createElement('li');item.textContent=food.name+' — '+food.grams+' г';list.append(item);});
+ article.append(heading,title,list);meals.append(article);
+ });
+ document.querySelector('#menu-total').textContent=format.format(menu.reduce((sum,meal)=>sum+meal.calories,0));
  for(const key of ['bmr','maintenance','target']) document.getElementById(key).textContent=format.format(values[key]);
  document.querySelector('#description').textContent=p.goal===0.85?'На 15% ниже нормы поддержания':p.goal===1.15?'На 15% выше нормы поддержания':'Без изменения нормы';
  status.textContent='';result.hidden=false;
