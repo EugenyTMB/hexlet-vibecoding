@@ -5,9 +5,9 @@
 </style></head><body><main><header><span class="badge">Просто о питании</span><h1>Суточная норма калорий</h1><p class="muted">Укажите параметры, активность и цель, чтобы получить ориентир на день.</p></header>
 <section class="card" aria-label="Ваши параметры"><form novalidate>
 <label>Пол<select name="sex" required><option value="male">Мужской</option><option value="female">Женский</option></select></label>
-<label>Возраст, лет<input name="age" type="number" min="18" max="120" step="1" required placeholder="30" inputmode="numeric"></label>
-<label>Вес, кг<input name="weight" type="number" min="20" max="500" step="any" required placeholder="70" inputmode="decimal"></label>
-<label>Рост, см<input name="height" type="number" min="100" max="250" step="any" required placeholder="175" inputmode="decimal"></label>
+<label>Возраст, лет<input name="age" type="number" min="18" max="120" step="1" required value="30" placeholder="30" inputmode="numeric"></label>
+<label>Вес, кг<input name="weight" type="number" min="20" max="500" step="0.1" required value="70" placeholder="70" inputmode="decimal"></label>
+<label>Рост, см<input name="height" type="number" min="100" max="250" step="0.1" required value="175" placeholder="175" inputmode="decimal"></label>
 <label class="wide">Уровень активности<select name="activity" required>
 <option value="1.2">Минимальный — сидячий образ жизни (×1,2)</option>
 <option value="1.375">Лёгкий — тренировки 1–3 раза в неделю (×1,375)</option>
