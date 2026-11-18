@@ -18,8 +18,8 @@
 <label class="wide">Цель<select name="goal" required><option value="0.85">Похудение −15%</option><option value="1" selected>Поддержание</option><option value="1.15">Набор +15%</option></select></label>
 <button class="wide" type="submit">Рассчитать норму</button></form><p id="status" role="status"></p></section>
 <section id="result" class="card" aria-live="polite" hidden><span class="badge">Ваша цель на день</span><div class="result"><span id="target"></span> ккал</div><p id="description" class="muted"></p><dl><dt>Основной обмен</dt><dd><span id="bmr"></span> ккал/день</dd><dt>Поддержание с учётом активности</dt><dd><span id="maintenance"></span> ккал/день</dd></dl>
-<div class="bmi-box"><h2>Индекс массы тела</h2><span id="bmi" class="bmi-number"></span> кг/м² · <span id="bmi-category"></span>
-<p class="muted">ИМТ = вес / рост в метрах². Границы для взрослых: &lt;18,5; 18,5–&lt;25; 25–&lt;30; ≥30. Категория определяется до округления. ИМТ — ориентир, а не диагноз; он не различает мышцы и жировую ткань.</p></div>
+<div class="bmi-box"><h2>Индекс массы тела</h2><span id="bmi" class="bmi-number"></span> кг/м²</div>
+<div class="bmi-box"><h2>Вода на день</h2><div class="bmi-number">≈<span id="water-litres"></span> л</div><p><span id="water-ml"></span> мл · вес × 30 мл/кг</p><p class="muted">Приблизительный ориентир общего количества жидкости, включая напитки и влагу пищи, а не дополнительной чистой воды. Потребность зависит от жары, нагрузки и состояния здоровья; при назначенном ограничении жидкости следуйте ему.</p></div>
 <h2>Что можно съесть за день</h2><p class="muted">Пример на ≈<span id="menu-total"></span> ккал: три приёма пищи. Меню не подогнано под вашу рассчитанную норму и не учитывает аллергии или ограничения питания. Порции можно менять; калорийность уточняйте по упаковке и рецепту.</p>
 <div id="meals" class="meals"></div>
 </section>
@@ -38,8 +38,11 @@ function calculateCalories(p) {
 function calculateBmi(weight, height) {
  const value = weight / ((height / 100) ** 2);
  if (!Number.isFinite(value) || weight <= 0 || height <= 0) throw new Error('Проверьте вес и рост.');
- const category = value < 18.5 ? 'Недостаточная масса тела' : value < 25 ? 'Нормальная масса тела' : value < 30 ? 'Избыточная масса тела' : 'Ожирение';
- return { value, category };
+ return { value };
+}
+function calculateWater(weight) {
+ if (!Number.isFinite(weight) || weight < 20 || weight > 500) throw new Error('Проверьте вес (20–500 кг).');
+ return { millilitres: weight * 30, litres: weight * 30 / 1000 };
 }
 const exampleMeals = [
  { name: 'Завтрак', title: 'Овсянка с бананом и орехами', foods: [
@@ -65,7 +68,7 @@ function getExampleMenu() {
  return exampleMeals.map(meal => ({...meal, calories:meal.foods.reduce((sum,food)=>sum+food.grams*food.kcal100/100,0)}));
 }
 
-if(typeof module!=='undefined') module.exports={calculateCalories,calculateBmi,getExampleMenu};
+if(typeof module!=='undefined') module.exports={calculateCalories,calculateBmi,calculateWater,getExampleMenu};
 if(typeof document!=='undefined'){
  const form=document.querySelector('form'),result=document.querySelector('#result'),status=document.querySelector('#status');
  const format=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0});
@@ -105,7 +108,9 @@ if(typeof document!=='undefined'){
  const values=calculateCalories(p);
  const bmi=calculateBmi(p.weight,p.height);
  document.querySelector('#bmi').textContent=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(bmi.value);
- document.querySelector('#bmi-category').textContent=bmi.category;
+ const water=calculateWater(p.weight);
+ document.querySelector('#water-litres').textContent=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(water.litres);
+ document.querySelector('#water-ml').textContent=format.format(water.millilitres);
  const meals=document.querySelector('#meals');
  meals.replaceChildren();
  const menu=getExampleMenu();

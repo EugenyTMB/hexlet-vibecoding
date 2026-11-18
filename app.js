@@ -11,8 +11,11 @@ function calculateCalories(p) {
 function calculateBmi(weight, height) {
  const value = weight / ((height / 100) ** 2);
  if (!Number.isFinite(value) || weight <= 0 || height <= 0) throw new Error('Проверьте вес и рост.');
- const category = value < 18.5 ? 'Недостаточная масса тела' : value < 25 ? 'Нормальная масса тела' : value < 30 ? 'Избыточная масса тела' : 'Ожирение';
- return { value, category };
+ return { value };
+}
+function calculateWater(weight) {
+ if (!Number.isFinite(weight) || weight < 20 || weight > 500) throw new Error('Проверьте вес (20–500 кг).');
+ return { millilitres: weight * 30, litres: weight * 30 / 1000 };
 }
 const exampleMeals = [
  { name: 'Завтрак', title: 'Овсянка с бананом и орехами', foods: [
@@ -38,7 +41,7 @@ function getExampleMenu() {
  return exampleMeals.map(meal => ({...meal, calories:meal.foods.reduce((sum,food)=>sum+food.grams*food.kcal100/100,0)}));
 }
 
-if(typeof module!=='undefined') module.exports={calculateCalories,calculateBmi,getExampleMenu};
+if(typeof module!=='undefined') module.exports={calculateCalories,calculateBmi,calculateWater,getExampleMenu};
 if(typeof document!=='undefined'){
  const form=document.querySelector('form'),result=document.querySelector('#result'),status=document.querySelector('#status');
  const format=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0});
@@ -78,7 +81,9 @@ if(typeof document!=='undefined'){
  const values=calculateCalories(p);
  const bmi=calculateBmi(p.weight,p.height);
  document.querySelector('#bmi').textContent=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:1}).format(bmi.value);
- document.querySelector('#bmi-category').textContent=bmi.category;
+ const water=calculateWater(p.weight);
+ document.querySelector('#water-litres').textContent=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(water.litres);
+ document.querySelector('#water-ml').textContent=format.format(water.millilitres);
  const meals=document.querySelector('#meals');
  meals.replaceChildren();
  const menu=getExampleMenu();
