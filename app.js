@@ -1,61 +1,26 @@
 'use strict';
-const storageKey = 'hexlet-calorie-foods-v1';
-const form = document.querySelector('#food-form');
-const status = document.querySelector('#status');
-const number = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
-const valid = item => item && typeof item.name === 'string' && item.name.trim().length > 0 && item.name.length <= 100 && Number.isFinite(item.weight) && item.weight >= 0.1 && item.weight <= 100000 && Number.isFinite(item.calories) && item.calories >= 0 && item.calories <= 1000;
-let foods = [];
-try {
-  const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  if (Array.isArray(saved)) foods = saved.filter(valid);
-} catch { status.textContent = 'Не удалось загрузить сохранённый список.'; }
-function save() {
-  try { localStorage.setItem(storageKey, JSON.stringify(foods)); }
-  catch { status.textContent = 'Сохранение недоступно. Список работает до закрытия страницы.'; }
+function calculateCalories(p) {
+ const {sex,age,weight,height,activity,goal}=p;
+ if(!['male','female'].includes(sex)||!Number.isInteger(age)||age<18||age>120||!Number.isFinite(weight)||weight<20||weight>500||!Number.isFinite(height)||height<100||height>250||![1.2,1.375,1.55,1.725,1.9].includes(activity)||![0.85,1,1.15].includes(goal)) throw new Error('Проверьте возраст (18–120), вес (20–500 кг) и рост (100–250 см).');
+ const bmr=10*weight+6.25*height-5*age+(sex==='male'?5:-161);
+ if(bmr<=0) throw new Error('Проверьте параметры: для них расчёт неприменим.');
+ const maintenance=bmr*activity;
+ return {bmr,maintenance,target:maintenance*goal};
 }
-function render() {
-  const body = document.querySelector('#foods');
-  body.replaceChildren();
-  let total = 0;
-  foods.forEach((food, index) => {
-    const kcal = food.weight * food.calories / 100;
-    total += kcal;
-    const row = document.createElement('tr');
-    [food.name, number.format(food.weight) + ' г', number.format(kcal)].forEach(value => {
-      const cell = document.createElement('td');
-      cell.textContent = value;
-      row.append(cell);
-    });
-    const cell = document.createElement('td');
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'remove';
-    button.textContent = 'Удалить';
-    button.setAttribute('aria-label', 'Удалить ' + food.name);
-    button.addEventListener('click', () => {
-      foods.splice(index, 1);
-      status.textContent = 'Продукт удалён.';
-      save(); render();
-      document.querySelector('#name').focus();
-    });
-    cell.append(button); row.append(cell); body.append(row);
-  });
-  document.querySelector('#total').textContent = number.format(total);
-  document.querySelector('#count').textContent = 'Продуктов: ' + foods.length;
-  document.querySelector('#empty').hidden = foods.length > 0;
-  document.querySelector('#table').hidden = foods.length === 0;
-  document.querySelector('#clear').hidden = foods.length === 0;
+if(typeof module!=='undefined') module.exports={calculateCalories};
+if(typeof document!=='undefined'){
+ const form=document.querySelector('form'),result=document.querySelector('#result'),status=document.querySelector('#status');
+ const format=new Intl.NumberFormat('ru-RU',{maximumFractionDigits:0});
+ form.addEventListener('input',()=>{result.hidden=true;status.textContent='';});
+ form.addEventListener('submit',event=>{
+ event.preventDefault();result.hidden=true;
+ const p={};
+ for(const key of ['sex','age','weight','height','activity','goal']) p[key]=key==='sex'?form.elements[key].value:Number(form.elements[key].value);
+ try{
+ const values=calculateCalories(p);
+ for(const key of ['bmr','maintenance','target']) document.getElementById(key).textContent=format.format(values[key]);
+ document.querySelector('#description').textContent=p.goal===0.85?'На 15% ниже нормы поддержания':p.goal===1.15?'На 15% выше нормы поддержания':'Без изменения нормы';
+ status.textContent='';result.hidden=false;
+ }catch(error){status.textContent=error.message;}
+ });
 }
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  const food = { name: document.querySelector('#name').value.trim(), weight: Number(document.querySelector('#weight').value), calories: Number(document.querySelector('#calories').value) };
-  if (!valid(food)) { status.textContent = 'Проверьте название, вес и калорийность продукта.'; return; }
-  foods.push(food);
-  status.textContent = 'Продукт добавлен.';
-  save(); render(); form.reset(); document.querySelector('#name').focus();
-});
-document.querySelector('#clear').addEventListener('click', () => {
-  foods = []; status.textContent = 'Список очищен.';
-  save(); render(); document.querySelector('#name').focus();
-});
-render();
