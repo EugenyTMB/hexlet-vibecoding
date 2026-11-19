@@ -111,6 +111,22 @@
     }
     .btn:hover { transform: translateY(-2px); }
 
+    /* Форма заявки остаётся внутри сетки страницы на любом экране. */
+    .request-form { max-width: 760px; margin: 0 auto; }
+    .request-form h2 { margin: 0 0 20px; text-align: center; }
+    .request-form iframe {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: 760px;
+      border: 0;
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    @media (max-width: 600px) {
+      .request-form iframe { height: 900px; }
+    }
+
     /* ===== Секции ===== */
     .section { padding: 50px 0; }
     .section h2 { font-size: 28px; text-align: center; margin: 0 0 32px; }
@@ -204,6 +220,18 @@
       <h1>Продвижение сайтов по поведенческим факторам</h1>
       <p>Настраиваю и веду проекты в Яндексе: подбор запросов, работа ботов, ежедневные отчёты по кликам и позициям.</p>
       <a class="btn" href="#contacts">Обсудить проект</a>
+    </section>
+
+    <!-- Форма заявки -->
+    <section class="container section" id="request">
+      <div class="request-form">
+        <h2>Оставить заявку</h2>
+        <iframe
+          src="https://forms.yandex.ru/u/6aff1cba9029027bf05914af/?iframe=1"
+          title="Форма заявки ПФ-Студии"
+          loading="lazy">Ваш браузер не поддерживает встроенные формы.</iframe>
+        <p>Если форма не отображается, <a href="https://forms.yandex.ru/u/6aff1cba9029027bf05914af/">откройте её отдельно</a>.</p>
+      </div>
     </section>
 
     <!-- Услуги: три карточки -->
