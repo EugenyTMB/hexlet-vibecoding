@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <!-- Чтобы страница нормально выглядела на телефоне -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // Применяем сохранённую тему до отрисовки страницы.
+    try {
+      const savedTheme = localStorage.getItem('pf-studio-theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        document.documentElement.dataset.theme = savedTheme;
+      }
+    } catch (error) { /* Тема работает и без доступа к хранилищу. */ }
+  </script>
   <title>Продвижение по поведенческим факторам</title>
 
   <!--
@@ -21,6 +30,35 @@
       --accent: #4f8cff;      /* акцентный цвет: кнопки, ссылки */
       --radius: 14px;         /* скругление углов */
     }
+
+    :root { color-scheme: dark; }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #526077;
+      --accent: #2563eb;
+    }
+    .theme-toggle {
+      position: fixed;
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(16px, env(safe-area-inset-bottom));
+      z-index: 100;
+      min-width: 48px;
+      min-height: 48px;
+      padding: 12px 16px;
+      border: 1px solid var(--muted);
+      border-radius: 999px;
+      background: var(--card);
+      color: var(--text);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px #0002;
+    }
+    .theme-toggle:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    .steps .num { color: #fff; }
 
     /* ===== Сброс и базовые настройки ===== */
     * { box-sizing: border-box; }      /* размеры считаются вместе с padding — так проще */
@@ -73,6 +111,30 @@
     }
     .btn:hover { transform: translateY(-2px); }
 
+    /* Форма наследует палитру сайта, высоту сообщает Яндекс через postMessage. */
+    .request-form {
+      max-width: 760px;
+      margin: 32px auto 0;
+      padding: clamp(12px, 3vw, 28px);
+      background: var(--card);
+      border: 1px solid color-mix(in srgb, var(--muted) 22%, transparent);
+      border-radius: var(--radius);
+      text-align: left;
+    }
+    .contacts .request-form h2 { margin: 0 0 20px; font-size: 24px; }
+    .request-form iframe {
+      display: block;
+      width: 100%;
+      height: 540px; /* Резерв, пока форма не прислала фактическую высоту. */
+      border: 0;
+      border-radius: 10px;
+      background: var(--card);
+    }
+    .request-form > p { margin: 16px 0 0; font-size: 14px; text-align: center; }
+    @media (max-width: 600px) {
+      .request-form { padding: 12px; }
+    }
+
     /* ===== Секции ===== */
     .section { padding: 50px 0; }
     .section h2 { font-size: 28px; text-align: center; margin: 0 0 32px; }
@@ -118,7 +180,7 @@
       text-align: center;
       color: var(--muted);
       font-size: 14px;
-      padding: 30px 0;
+      padding: 30px 0 96px;
       border-top: 1px solid var(--card);
     }
 
@@ -147,6 +209,8 @@
   <meta name="twitter:image" content="https://eugenytmb.github.io/hexlet-vibecoding/vizitka/preview.png">
 </head>
 <body>
+  <button class="theme-toggle" id="theme-toggle" type="button" hidden
+          aria-label="Включить светлую тему" aria-pressed="false">☀ Светлая тема</button>
 
   <!-- Шапка: логотип и меню. Ссылки ведут к секциям по их id -->
   <header class="container header">
@@ -165,6 +229,7 @@
       <p>Настраиваю и веду проекты в Яндексе: подбор запросов, работа ботов, ежедневные отчёты по кликам и позициям.</p>
       <a class="btn" href="#contacts">Обсудить проект</a>
     </section>
+
 
     <!-- Услуги: три карточки -->
     <section class="container section" id="services">
@@ -205,6 +270,15 @@
       <p>Напишите в Telegram — отвечу в течение дня.</p>
       <!-- Замените ссылку на свой ник -->
       <a class="btn" href="https://t.me/xo4y_v_otpysk">Написать в Telegram</a>
+      <div class="request-form" id="request">
+        <h2>Оставить заявку</h2>
+        <iframe
+          id="request-frame"
+          src="https://forms.yandex.ru/u/6aff1cba9029027bf05914af/?iframe=1&amp;theme=dark"
+          title="Форма заявки ПФ-Студии"
+          loading="lazy">Ваш браузер не поддерживает встроенные формы.</iframe>
+        <p>Если форма не отображается, <a href="https://forms.yandex.ru/u/6aff1cba9029027bf05914af/">откройте её отдельно</a>.</p>
+      </div>
     </section>
   </main>
 
@@ -222,5 +296,50 @@
     6. На телефоне меню прячется — сделайте вместо него кнопку-бургер (понадобится немного JavaScript).
     7. Добавьте плавную прокрутку к секциям: html { scroll-behavior: smooth; }
   -->
+  <script>
+    (() => {
+      const button = document.getElementById('theme-toggle');
+      const root = document.documentElement;
+      const frame = document.getElementById('request-frame');
+      const formOrigin = 'https://forms.yandex.ru';
+      // Протокол официального embed.js; проверяем отправителя и размер.
+      window.addEventListener('message', (event) => {
+        if (event.origin !== formOrigin || event.source !== frame.contentWindow) return;
+        try {
+          const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+          const height = Number(data && data['iframe-height']);
+          if (Number.isFinite(height) && height > 0 && height <= 20000) {
+            frame.style.height = Math.ceil(height) + 'px';
+          }
+        } catch (error) {}
+      });
+      function updateFormTheme() {
+        const url = new URL(frame.src);
+        const theme = root.dataset.theme === 'light' ? 'light' : 'dark';
+        if (url.searchParams.get('theme') !== theme) {
+          url.searchParams.set('theme', theme);
+          frame.src = url.href;
+        }
+      }
+      function updateButton() {
+        updateFormTheme();
+        const isLight = root.dataset.theme === 'light';
+        const label = isLight ? 'Включить тёмную тему' : 'Включить светлую тему';
+        button.textContent = isLight ? '☾ Тёмная тема' : '☀ Светлая тема';
+        button.setAttribute('aria-label', label);
+        button.setAttribute('title', label);
+        button.setAttribute('aria-pressed', String(isLight));
+      }
+      button.addEventListener('click', () => {
+        const theme = root.dataset.theme === 'light' ? 'dark' : 'light';
+        root.dataset.theme = theme;
+        try { localStorage.setItem('pf-studio-theme', theme); } catch (error) {}
+        updateButton();
+      });
+      updateButton();
+      button.hidden = false;
+    })();
+  </script>
 </body>
 </html>
+
