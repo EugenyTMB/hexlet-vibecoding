@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <!-- Чтобы страница нормально выглядела на телефоне -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Продвижение по поведенческим факторам</title>
+
+  <!--
+    Все стили пока лежат здесь, в <style>, чтобы страница открывалась одним файлом.
+    Упражнение 1: перенесите их в отдельный файл style.css и подключите так:
+    <link rel="stylesheet" href="style.css">
+  -->
+  <style>
+    /* ===== Переменные: поменяйте цвета здесь — и они изменятся на всей странице ===== */
+    :root {
+      --bg: #0f1115;          /* фон страницы */
+      --card: #1a1d24;        /* фон карточек */
+      --text: #e8eaed;        /* основной текст */
+      --muted: #9aa0a8;       /* второстепенный текст */
+      --accent: #4f8cff;      /* акцентный цвет: кнопки, ссылки */
+      --radius: 14px;         /* скругление углов */
+    }
+
+    /* ===== Сброс и базовые настройки ===== */
+    * { box-sizing: border-box; }      /* размеры считаются вместе с padding — так проще */
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); }
+
+    /* Контейнер ограничивает ширину контента и центрирует его */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== Шапка ===== */
+    .header {
+      display: flex;                   /* элементы в строку */
+      justify-content: space-between;  /* логотип слева, меню справа */
+      align-items: center;
+      padding: 20px 0;
+    }
+    .logo { font-weight: 700; font-size: 20px; }
+    .nav a {
+      margin-left: 20px;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .nav a:hover { color: var(--text); }
+
+    /* ===== Первый экран ===== */
+    .hero { padding: 80px 0 60px; text-align: center; }
+    .hero h1 { font-size: 40px; line-height: 1.2; margin: 0 0 16px; }
+    .hero p { color: var(--muted); font-size: 18px; max-width: 600px; margin: 0 auto 32px; }
+
+    /* Кнопка */
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-weight: 600;
+      transition: transform .15s;      /* плавная анимация при наведении */
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    /* ===== Секции ===== */
+    .section { padding: 50px 0; }
+    .section h2 { font-size: 28px; text-align: center; margin: 0 0 32px; }
+
+    /* Сетка карточек: на широком экране 3 колонки, на узком — сама перестроится */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .card .icon { font-size: 32px; }
+    .card h3 { margin: 12px 0 8px; }
+    .card p { margin: 0; color: var(--muted); }
+
+    /* Шаги работы: нумерованный список, оформленный как карточки */
+    .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+    .steps li {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .steps .num {
+      flex: none;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: grid; place-items: center;   /* центрирует цифру в кружке */
+      font-weight: 700;
+    }
+
+    /* ===== Контакты и подвал ===== */
+    .contacts { text-align: center; }
+    .contacts p { color: var(--muted); }
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 30px 0;
+      border-top: 1px solid var(--card);
+    }
+
+    /* ===== Адаптив: правила только для экранов уже 600px (телефоны) ===== */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 28px; }
+      .nav { display: none; }          /* на телефоне прячем меню */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Шапка: логотип и меню. Ссылки ведут к секциям по их id -->
+  <header class="container header">
+    <div class="logo">ПФ‑Студия</div>
+    <nav class="nav">
+      <a href="#services">Услуги</a>
+      <a href="#steps">Как работаем</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Первый экран: главный заголовок и кнопка -->
+    <section class="container hero">
+      <h1>Продвижение сайтов по поведенческим факторам</h1>
+      <p>Настраиваю и веду проекты в Яндексе: подбор запросов, работа ботов, ежедневные отчёты по кликам и позициям.</p>
+      <a class="btn" href="#contacts">Обсудить проект</a>
+    </section>
+
+    <!-- Услуги: три карточки -->
+    <section class="container section" id="services">
+      <h2>Что я делаю</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="icon">🔍</div>
+          <h3>Анализ</h3>
+          <p>Смотрю сайт, конкурентов и запросы, на которых стоит работать.</p>
+        </div>
+        <div class="card">
+          <div class="icon">⚙️</div>
+          <h3>Настройка</h3>
+          <p>Собираю проекты, прогрев профилей и сценарии под вашу нишу.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📊</div>
+          <h3>Отчёты</h3>
+          <p>Каждый день — клики, позиции и видимость в понятной таблице.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Как работаем: нумерованные шаги -->
+    <section class="container section" id="steps">
+      <h2>Как работаем</h2>
+      <ol class="steps">
+        <li><span class="num">1</span> Вы присылаете сайт и список запросов</li>
+        <li><span class="num">2</span> Я анализирую и предлагаю план</li>
+        <li><span class="num">3</span> Запускаю проект и прогрев</li>
+        <li><span class="num">4</span> Присылаю отчёты и корректирую стратегию</li>
+      </ol>
+    </section>
+
+    <!-- Контакты -->
+    <section class="container section contacts" id="contacts">
+      <h2>Контакты</h2>
+      <p>Напишите в Telegram — отвечу в течение дня.</p>
+      <!-- Замените ссылку на свой ник -->
+      <a class="btn" href="https://t.me/xo4y_v_otpysk">Написать в Telegram</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    © 2026 ПФ‑Студия
+  </footer>
+
+  <!--
+    Задания для практики (от простого к сложному):
+    1. Перенесите стили в отдельный style.css.
+    2. Поменяйте цвета в :root и шрифт в body — посмотрите, как меняется вся страница.
+    3. Добавьте четвёртую карточку в «Что я делаю». Сетка перестроится сама.
+    4. Добавьте секцию «Отзывы» или «Цены» по образцу секции услуг.
+    5. Сделайте шапку «липкой»: position: sticky; top: 0; и фон, чтобы она не просвечивала.
+    6. На телефоне меню прячется — сделайте вместо него кнопку-бургер (понадобится немного JavaScript).
+    7. Добавьте плавную прокрутку к секциям: html { scroll-behavior: smooth; }
+  -->
+</body>
+</html>
